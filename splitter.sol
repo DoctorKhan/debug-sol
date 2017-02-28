@@ -1,20 +1,18 @@
 pragma solidity ^0.4.0;
 
-contract WarehouseI {
-    function ship(uint id, address customer) returns (bool handled);
-}
+contract Splitter {
+    address one;
+    address two;
 
-contract Store {
-    address wallet;
-    WarehouseI warehouse;
-
-    function Store(address _wallet, address _warehouse) {
-        wallet = _wallet;
-        warehouse = WarehouseI(_warehouse);
+    function Splitter(address _two) {
+        if (_two == 0) throw;
+        one = msg.sender;
+        two = _two;
     }
 
-    function purchase(uint id) payable returns (bool success) {
-        if (!wallet.send(msg.value)) throw;
-        return warehouse.ship(id, msg.sender);
+    function () {
+        uint amount = this.balance / 2;
+        if (!one.send(amount)) throw;
+        if (!two.send(amount)) throw;
     }
 }
